@@ -108,18 +108,24 @@ class School:
     def _parse_fa(self, bs):
         """
         """
-        self.row['Aid'] = bs.find(class_='profile__website__link').get('href')
+        try:
+            self.row['Aid'] = bs.find(class_='profile__website__link').get('href')
+        except:
+            pass
 
-        bd = bs.find(id='financial-aid-breakdown').find_all(class_='fact__table__row__value')
-        self.row['Fed%'] = bd[0].text
-        self.row['Fed$'] = bd[4].text
-        self.row['State%'] = bd[1].text
-        self.row['State$'] = bd[5].text
-        self.row['Inst%'] = bd[2].text
-        self.row['Inst$'] = bd[6].text
-        self.row['Pel%'] = bd[3].text
-        self.row['Pel$'] = bd[7].text
-    
+        try:
+            bd = bs.find(id='financial-aid-breakdown').find_all(class_='fact__table__row__value')
+            self.row['Fed%'] = bd[0].text
+            self.row['Fed$'] = bd[4].text
+            self.row['State%'] = bd[1].text
+            self.row['State$'] = bd[5].text
+            self.row['Inst%'] = bd[2].text
+            self.row['Inst$'] = bd[6].text
+            self.row['Pel%'] = bd[3].text
+            self.row['Pel$'] = bd[7].text
+        except:
+            pass
+        
     def _parse_loans(self, bs):
         """
         """
@@ -180,7 +186,10 @@ class School:
         self.row['Common App'] = vals[4].contents[-1].text
         self.row['Coalition App'] = vals[5].contents[-1].text
 
-        self.row['Apply'] = dead.find(class_='profile__website__link').get('href')
+        try:
+            self.row['Apply'] = dead.find(class_='profile__website__link').get('href')
+        except:
+            pass
 
         vals = bs.find(id="admissions-requirements").find_all(class_="fact__table__row__value")
         self.row['HS GPA'] = vals[0].text

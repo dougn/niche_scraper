@@ -1,0 +1,105 @@
+How this Document Works,,
+,,"The data is scraped from the Niche website (link below.) Data is grouped into categories. The data is tabulated in multiple ways, some which can be sorted, and some that are easier to read or print. The data can be re-generated and imported. There is a script which accepts a list of URL's to the schools on Niche and generates the data to be imported. Some formatting is required post-import. The current list of schools is more of an example. Not all the desired data is currently available, and anything could be removed if it is found to not be helpful."
+Niche, https://www.niche.com/,
+,,
+Sheet Descriptions (tabs at the bottom),,
+Sheets,,The sheet tabs at the bottom
+,Key,This page. Understanding what data is collected.
+,sortable,Schools can be sorted by clicking the column. Sort by any of the fields.
+,collapsed,Just the first two columns of each category for a quick overview. Also sortable.
+,rotated,"NOT sortable, but best for printing and comparing schools."
+,,
+Data Category/Column Descriptions,,
+Ranks,,"A+ ==> F ranking on categories, names are self evident. (need to add color formatting)"
+,Overall,
+,Academics,
+,Value,
+,Professors,"I was going to prune some of these, but they each turned out to provide interesting info."
+,Campus,
+,Location,Location is for the school
+,Dorms,
+,Campus Food,
+,Student Life,
+,Safety,Safety is for the city/town around the school
+,Diversity,
+,Athletics,A+ Athletics correlates to poor Engineering/Science OR aid geared to Athletics.
+,Party Scene,Interesting correlations to dropout info
+Costs,,"Cost breakdowns (need to add smarts on which is the best fit: commuting v.s. in-state live on campus, etc.)"
+,IS Tot,In-State Total w/o Financial Aid (but with housing meal and supplies)
+,OoS Tot,Out-of-State Total w/o Financial Aid
+,Com Tot,"Commuter Total: assumed cost: In-State, no Housing, but meal plan and supplies."
+,Tuition IS,In-State Tuition
+,Tuition OoS,Out-of-State Tuition
+,Housing,Housing (avg.)
+,Meal,Meal Plan (avg.)
+,Supplies,"Supplies (books, etc. avg.)"
+Aid,,How much aid can we expect to get?
+,FA%,% students attending with Financial Aid
+,$110k+ Net,Avg. Net amount paid for 1 year with Financial Aid by family earning $110k+ (cuttoff for many FA/Grant programs)
+,Avg FA,Avg. Financial Aid granted to students who get FA. (Only those who have it granted!) Check the % for realities.
+,Avg FA $110k+,Avg. Financial Aid granted to students with families earning $110k+
+,No Increase,Tuition price (not others) is locked and will not increase for future years upon full payment.
+,Installments,Can pay in installments over the year
+,PrePay,"Can pre-pay for FUTURE years at the current year price, or has similar discount; as opposed to No Increase."
+,Fed%,% of those with grants/aid getting it from Fed.
+,Fed$,Avg. Fed aid supplied to those who get Fed. aid.
+,State%,% of those with grants/aid from state (usually must live in state.)
+,State$,Avg. State aid supplied to those who get State aid.
+,Inst%,% of those getting Grants/Aid directly from the School.
+,Inst$,Avg. aid provided by the school to students who get aid from the school.
+,Pel%,% of those getting aid who have a Pel grant.
+,Pel$,Avg. Pel Grant amount by those who get Pel grants.
+,Loan%,% of students with a loan
+,Loan$,Avg. Loan amount by those with a loan.
+,Default%,% of those who default on the loan. NOTE: anything higher than 3% indicates HIGH dropout issues.
+Admissions,,How do you get in? What are the chances?
+,Acceptance Rate,% of those who apply who are accepted.
+,Applicants,# applicants
+,Early Rate,% of those who are accpeted who got in via early acceptance.
+,Deadline,Deadline for normal admission
+,Decision Deadline,Early Decision deadline. Apply for this to get in before most people even apply! (not all schools)
+,Action Deadline,"Early Action deadline. Apply early, and find out soon after everyone else has just applied. (not all schools)"
+,SAT,SAT range of those accepted.
+,SAT Math,SAT Math range of those accepted.
+,SAT Reading,SAT Reading range of those accepted.
+,SAT%,"% of accepted who supplied SAT (not all require, some require SAT or ACT or both)"
+,ACT,ACT range (SAT++)
+,ACT Math,
+,ACT English,
+,ACT Writing,ACT has writing independent of English! Engineering usually has very low requirements for this.
+,ACT%,% of those accepted who supplied the ACT to get in
+,Fee,Application fee for general Admission $50-$100 | NOTE: Early Action/Decision is usually $500-$1500
+,Common App,Accepts the Common Application. Online standardized application.
+,Coalition App,"Different application that is newer than the common app that some schools prefer, but many are not using yet."
+,Early Decision,Has early Decision
+,Early Action,Has early Action
+,HS GPA,Requires High School GPA [Required | Recommended | Considered | Neither Req. Rec. nor Con.]
+,HS Rank,Requires High School Student Ranking  [Required | Recommended | Considered | Neither Req. Rec. nor Con.]
+,HS Transcript,Requires High School Transcript [R|R|C|N]
+,Col Prep Courses,Requires College Prep Course Transcripts NOTE: ALL SCHOOLS NOW REQUIRE THIS! [Required!]
+,SAT/ACT,"Require SAT or ACT or Both (when unclear, check with school application.)"
+,Recomendations,Requires Recomendations [Required!]
+Academics,,How good is this school? How good of a fit academically? (Need to add Eng. Program eval)
+,S:T,"Student:Teacher ratio overall, not by class. (Need to add class size breakdowns.)"
+,Grad%,"% of students who graduate. Others drop out to transfer, but don't know which. Have to look at other data to guess."
+,Fulltime,# fultime students (across all grades)
+,Fulltime%,Retention % of students who are fulltime who return the next year. [Quazi dropout rate per-year]
+,Parttime,Number of students across all grades who are attending part-time.
+,Parttime%,Partitme student retention %. [Maybe the low Grad% is due to parttime students? look at Parttime count]
+,Evening,Offers evening courses (important for parttime!)
+,LoC,% of studentes who 'Live on Campus'
+,Calendar,"Semester, Trimester, Rolling, etc."
+,Grad$,Avg. Salary after Graduation of those who graduated.
+,Emp%,% of students who graduated who are employed after 2 years.
+Location,,
+,Size,"General size of the school (city, etc?)"
+,Miles,Miles from the house as the crow flies (roughly)
+Urls,,Links to important things
+,Niche,Niche website where the data was scrapped from
+,School,School main page
+,Info,School Prppoganda Page (Go to our school! we are awesome!)
+,Apply,Link to apply to the school
+,Visit,Link for how to visit the school/when/etc.
+,Aid,Link to School FA programs
+,Calc,Link to school supplied (or contracted) Tuition/Aid calculator to get a more accurate estimate.
+Notes,,Hand typed notes on the school.

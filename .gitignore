@@ -103,6 +103,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*.env/
 
 # Spyder project settings
 .spyderproject
@@ -121,3 +122,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# OSX trash
+.DS_Store

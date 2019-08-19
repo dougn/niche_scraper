@@ -1,0 +1,5 @@
+click
+geopy
+beautifulsoup4
+user-config
+gooey

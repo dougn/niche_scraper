@@ -1,0 +1,116 @@
+import itertools
+import shutil
+import os.path
+
+def write_key(dest):
+    shutil.copyfile(
+        os.path.join(os.path.dirname(__file__), 'sheet1 - Key.csv'), 
+        dest)
+        
+BREAKDOWN = {
+    'Name': ['Name',],
+    'Ranks': [
+        'Overall',
+        'Academics',
+        'Value', 
+        'Professors',
+        'Campus', 
+        'Location', 
+        'Dorms', 
+        'Campus Food', 
+        'Student Life', 
+        'Safety',
+        'Diversity', 
+        'Athletics', 
+        'Party Scene', 
+    ],
+    'Costs' : [
+        'IS Tot',
+        'OoS Tot',
+        'Com Tot',
+        'Tuition IS',
+        'Tuition OoS',
+        'Housing',
+        'Meal',
+        'Supplies',
+    ],
+    'Aid' :[
+        'FA%',
+        '$110k+ Net',
+        'Avg FA',
+        'Avg FA $110k+',
+        'No Increase',
+        'Installments',
+        'PrePay',
+        'Fed%',
+        'Fed$',
+        'State%',
+        'State$',
+        'Inst%',
+        'Inst$',
+        'Pel%',
+        'Pel$',
+        'Loan%',
+        'Loan$',
+        'Default%'
+    ],
+    'Admissions': [
+        'Acceptance Rate',
+        'Applicants',
+        'Early Rate',
+        'Deadline',
+        'Decision Deadline',
+        'Action Deadline',
+        'SAT',
+        'SAT Math',
+        'SAT Reading',
+        'SAT%',
+        'ACT',
+        'ACT Math',
+        'ACT English',
+        'ACT Writing',
+        'ACT%',
+        'Fee',
+        'Common App',
+        'Coalition App',
+        'Early Decision',
+        'Early Action',
+        'HS GPA',
+        'HS Rank',
+        'HS Transcript',
+        'Col Prep Courses',
+        'SAT/ACT',
+        'Recomendations',
+    ],
+    'Academics': [
+        'S:T',
+        'Grad%',
+        'Fulltime',
+        'Fulltime%',
+        'Parttime',
+        'Parttime%',
+        'Evening',
+        'LoC',
+        'Calendar',
+        'Grad$',
+        'Emp%',
+    ],
+    'Location': [
+        'Size',
+        'Miles',
+    ],
+    'Urls' : [
+        'Niche',
+        'School',
+        'Info',
+        'Apply',
+        'Visit',
+        'Aid',
+        'Calc',
+    ],
+    'Notes': ['Notes',],
+}
+
+COLUMNS = list(itertools.chain(*list(BREAKDOWN.values())))
+COLLAPSED = list(itertools.chain(*list(itertools.islice(x, 2) for x in BREAKDOWN.values())))
+PREHEADERROW = {v[0]:k for k,v in BREAKDOWN.items()}

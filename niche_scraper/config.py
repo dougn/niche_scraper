@@ -1,6 +1,6 @@
 # Copyright (c) 2019 Doug Napoleone
 
-from .usrcfg import UserConfig, Section, StringOption, IntegerOption, FloatOption
+from .usrcfg import UserConfig, Section, StringOption, IntegerOption, FloatOption, BooleanOption
 from .version import __version__, __author__
 
 __all__ = ['AppConfig', 'CONFIG']
@@ -22,8 +22,12 @@ class AppConfig(UserConfig):
     class WebSection(Section):
         """Options for the 
         """
+        Cache = BooleanOption("Cache web pages locally", 
+            default=True, 
+            required=False)
         UserAgent = StringOption("User-Agent to use when talking to niche.com", 
-            default='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36')
+            default='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+            required=False)
     web = WebSection()
     class GeoLocationSection(Section):
         """GeoLocation options. Distance measurements are in miles from 

@@ -142,6 +142,7 @@ class UserConfig(Config):
         if global_path.is_file():
             self._read(global_path, self._elements)
         # read user config
+        self.user_cache_dir = Path(paths.user_config_dir).joinpath('cache')
         if user_path is None:
             user_path = Path(paths.user_config_dir)
         user_path = user_path.joinpath(

@@ -25,6 +25,8 @@ BREAKDOWN = {
         'Party Scene', 
     ],
     'Costs' : [
+        'Total',
+        'TBasis',
         'IS Tot',
         'OoS Tot',
         'Com Tot',
@@ -97,7 +99,9 @@ BREAKDOWN = {
     ],
     'Location': [
         'Size',
+        'Travel',
         'Miles',
+        'State',
     ],
     'Urls' : [
         'Niche',

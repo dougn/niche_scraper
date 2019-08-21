@@ -3,6 +3,7 @@
 from .config import CONFIG
 from .util import *
 from .fields import *
+import json
 
 class School:
     def __init__(self, url):
@@ -16,9 +17,47 @@ class School:
         self.row = dict(Niche = url)
         print(url)
         self.parse()
+        self.compute_costs()
 
     def sum(self, *fields):
         return int2dol(sum(dol2int(self.row.get(f, '0')) for f in fields))
+    
+    def housing_needed(self):
+        if self.row.get('LoC', '') == '100%': 
+            return True
+        if self.row.get('LoC Required', '') == 'Yes':
+            return True
+        return self.row.get('Miles', 0) > CONFIG.geo_location.HousingDistance
+
+    def is_instate(self):
+        return self.row.get('State', '') == CONFIG.geo_location.HomeState
+    
+    def compute_costs(self):
+        self.row['Miles'] = get_miles(self.latitude, self.longitude)
+        self.row['Travel'] = get_travel(self.row['Miles'])
+        
+        self.row['Avg FA $110k+'] = int2dol(dol2int(self.row['Tuition OoS'])-
+                                         dol2int(self.row['$110k+ Net']))
+
+        self.row['IS Tot'] = self.sum('Tuition IS','Housing','Meal','Supplies')
+        self.row['OoS Tot'] = self.sum('Tuition OoS','Housing','Meal','Supplies')
+        self.row['Com Tot'] = self.sum('Tuition IS','Meal','Supplies')
+
+        tosum = ['Supplies']
+        tt = ''
+        if self.is_instate():
+            tosum.append('Tuition IS')
+            tt+='IS '
+        else:
+            tosum.append('Tuition OoS')
+            tt+='OoS '
+        if self.housing_needed():
+            tosum.extend(['Housing', 'Meal'])
+            tt+='Campus'
+        else:
+            tt+='Home'
+        self.row['Total'] = self.sum(*tosum)
+        self.row['TBasis'] = tt
 
     def _parse_main(self, bs):
         """
@@ -28,9 +67,10 @@ class School:
         print(self.row['Name'])
 
         # lon/lat
-        self.longitude = float(bs.find('meta', property='place:location:longitude').get('content'))
+        lon = bs.find('meta', property='place:location:longitude')
+        self.row['State'] = json.loads(lon.parent()[-1].text)['address']['addressRegion']
+        self.longitude = float(lon.get('content'))
         self.latitude = float(bs.find('meta', property='place:location:latitude').get('content'))
-        self.row['Miles'] = get_miles(self.latitude, self.longitude)
 
         # Urls/[Apply, Visit, School, Info]
         buttons = bs.find_all(class_="button")
@@ -87,18 +127,11 @@ class School:
         self.row['Tuition IS'] = buckets[0].find(class_="scalar__value").span.text
         self.row['Tuition OoS'] = buckets[1].find(class_="scalar__value").span.text
 
-        self.row['Avg FA $110k+'] = int2dol(dol2int(self.row['Tuition OoS'])-
-                                         dol2int(self.row['$110k+ Net']))
-
         vals = sticker.find_all(class_="scalar--three")
-        
+
         self.row['Housing'] = vals[0].contents[-1].text.split('/')[0]
         self.row['Meal'] = vals[1].contents[-1].text.split('/')[0]
         self.row['Supplies'] = vals[2].contents[-1].text.split('/')[0]
-
-        self.row['IS Tot'] = self.sum('Tuition IS','Housing','Meal','Supplies')
-        self.row['OoS Tot'] = self.sum('Tuition OoS','Housing','Meal','Supplies')
-        self.row['Com Tot'] = self.sum('Tuition IS','Meal','Supplies')
 
         # Aid/[No Increase, Installments, PrePay]
         self.row['No Increase'] = vals[3].contents[-1].text
@@ -108,23 +141,17 @@ class School:
     def _parse_fa(self, bs):
         """
         """
-        try:
-            self.row['Aid'] = bs.find(class_='profile__website__link').get('href')
-        except:
-            pass
+        self.row['Aid'] = bs.find(class_='profile__website__link').get('href')
 
-        try:
-            bd = bs.find(id='financial-aid-breakdown').find_all(class_='fact__table__row__value')
-            self.row['Fed%'] = bd[0].text
-            self.row['Fed$'] = bd[4].text
-            self.row['State%'] = bd[1].text
-            self.row['State$'] = bd[5].text
-            self.row['Inst%'] = bd[2].text
-            self.row['Inst$'] = bd[6].text
-            self.row['Pel%'] = bd[3].text
-            self.row['Pel$'] = bd[7].text
-        except:
-            pass
+        bd = bs.find(id='financial-aid-breakdown').find_all(class_='fact__table__row__value')
+        self.row['Fed%'] = bd[0].text
+        self.row['Fed$'] = bd[4].text
+        self.row['State%'] = bd[1].text
+        self.row['State$'] = bd[5].text
+        self.row['Inst%'] = bd[2].text
+        self.row['Inst$'] = bd[6].text
+        self.row['Pel%'] = bd[3].text
+        self.row['Pel$'] = bd[7].text
         
     def _parse_loans(self, bs):
         """
@@ -205,7 +232,9 @@ class School:
         """
         for page, url in self.urls.items():
             bs = get_page(url)
-            getattr(self, '_parse_'+page)(bs)
+            if bs is not None:
+                getattr(self, '_parse_'+page)(bs)
+        
 
 def rotated_rows_iter(schools):
     prefix=['', '']

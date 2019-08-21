@@ -2,17 +2,21 @@ import click
 import csv
 from .core import School, rotated_rows_iter
 from .fields import *
-from .util import BASE_URL
+from .util import BASE_URL, flush_cache
+from .config import CONFIG
 
 @click.command()
+@click.option('--flush', is_flag=True)
 @click.argument('urllist', default='schools.lst', type=click.File('r'))
 @click.argument('key', default='sheet1 - Key.csv')
 @click.argument('main', default='sheet2 - sortable.csv')
 @click.argument('collapsed', default='sheet3 - collapsed.csv')
 @click.argument('rotated', default='sheet4 - rotated.csv')
-def main(urllist, key, main, collapsed, rotated):
+def main(flush, urllist, key, main, collapsed, rotated):
     """
     """
+    if flush:
+        flush_cache()
     urls = [url.strip() for url in urllist]
     schools = [School(url) for url in urls if url.startswith(BASE_URL)]
     with open(main, 'w', newline='') as fmain:

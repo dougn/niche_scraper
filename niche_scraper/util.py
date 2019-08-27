@@ -1,4 +1,5 @@
 import locale
+import math
 import base64
 import os.path
 import shutil
@@ -38,17 +39,31 @@ def get_page(url, cache=CONFIG.web.Cache):
             open(cachefilename, 'w').write(data_conv)
     return BeautifulSoup(data, 'html.parser')
 
+def _rescale_miles(base):
+    l = math.log(base+1.0)
+    p = 30.0-(l*3.0)
+    if p < 0: return base
+    return int((base+1.0)*(1.0+(p/100.0)))
+
 def get_miles(lat, lon):
-    return int(distance.distance(
-        (CONFIG.geo_location.HomeLatitude, CONFIG.geo_location.HomeLongitude), 
-        (lat,lon)).miles)
+    base = distance.distance(
+        (CONFIG.geo.HomeLatitude, CONFIG.geo.HomeLongitude), 
+        (lat,lon)).miles
+    if CONFIG.geo.CorrectShortDistances:
+        return _rescale_miles(base)
+    return int(base)
 
 def get_travel(miles):
     res = 'Fly'
-    if miles < CONFIG.geo_location.DriveDistance:
+    if miles < CONFIG.geo.DriveDistance:
         res = 'Drive'
-    if miles < CONFIG.geo_location.CommuteDistance:
+    if miles < CONFIG.geo.CommuteDistance:
         res = 'Commute'
-    if miles < CONFIG.geo_location.PublicTransDistance:
+    if miles < CONFIG.geo.PublicTransDistance:
         res = 'Public Trans'
     return res
+
+def get_size(nStudents):
+    if (nStudents <= CONFIG.general.Small): return 'Small'
+    if (nStudents >= CONFIG.general.Large): return 'Large'
+    return 'Meduim'

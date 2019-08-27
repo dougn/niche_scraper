@@ -17,22 +17,25 @@ class School:
         self.row = dict(Niche = url)
         print(url)
         self.parse()
-        self.compute_costs()
+        self.compute_fields()
 
-    def sum(self, *fields):
-        return int2dol(sum(dol2int(self.row.get(f, '0')) for f in fields))
+    def sum(self, *fields, todol=True):
+        res = sum(dol2int(self.row.get(f, '0')) for f in fields)
+        if todol:
+            return int2dol(res)
+        return res
     
     def housing_needed(self):
         if self.row.get('LoC', '') == '100%': 
             return True
         if self.row.get('LoC Required', '') == 'Yes':
             return True
-        return self.row.get('Miles', 0) > CONFIG.geo_location.HousingDistance
+        return self.row.get('Miles', 0) > CONFIG.geo.HousingDistance
 
     def is_instate(self):
-        return self.row.get('State', '') == CONFIG.geo_location.HomeState
+        return self.row.get('State', '') == CONFIG.geo.HomeState
     
-    def compute_costs(self):
+    def compute_fields(self):
         self.row['Miles'] = get_miles(self.latitude, self.longitude)
         self.row['Travel'] = get_travel(self.row['Miles'])
         
@@ -53,11 +56,16 @@ class School:
             tt+='OoS '
         if self.housing_needed():
             tosum.extend(['Housing', 'Meal'])
-            tt+='Campus'
+            if self.sum('Housing', todol=False) == 0:
+                tt+='Rent'
+            else:
+                tt+='Dorm'
         else:
             tt+='Home'
         self.row['Total'] = self.sum(*tosum)
         self.row['TBasis'] = tt
+
+        self.row['Size'] = get_size(self.sum('Fulltime', 'Parttime', todol=False))
 
     def _parse_main(self, bs):
         """

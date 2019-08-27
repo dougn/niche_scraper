@@ -18,6 +18,13 @@ class AppConfig(UserConfig):
     class GeneralSection(Section):
         """
         """
+        Small = IntegerOption("Schools with this student body size or less are small.",
+            default=5000,
+            required=False)
+        Large = IntegerOption("Schools with this student body size or larger are large.",
+            default=15000,
+            required=False)
+
     general = GeneralSection()
     class WebSection(Section):
         """Options for the 
@@ -36,6 +43,10 @@ class AppConfig(UserConfig):
         How hard is it to get home if needed?
         Anything over the DriveDistance is considered to require Flight.
         """
+        CorrectShortDistances = BooleanOption(
+            "",
+            default=True,
+            required=False)
         HomeLongitude = FloatOption(
             "Longitude of your home (can begotten from google maps.)", 
             required=True)
@@ -61,8 +72,12 @@ class AppConfig(UserConfig):
             "If the school is less than this many miles from home, then driving to the school is preferable to flying (0 to disable.)", 
             default=350,
             required=False)
+        CorrectShortDistances = BooleanOption(
+            "Scale up short distances due to issues with the given geo calculations and allow for more accurate travel times.",
+            default=True,
+            required=False)
 
-    geo_location = GeoLocationSection()
+    geo = GeoLocationSection()
 
 def main():
     AppConfig(cli=True)

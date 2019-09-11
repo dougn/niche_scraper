@@ -62,9 +62,10 @@ class School:
                 tt+='Dorm'
         else:
             tt+='Home'
+
         self.row['Total'] = self.sum(*tosum)
         self.row['TBasis'] = tt
-
+        
         self.row['Size'] = get_size(self.sum('Fulltime', 'Parttime', todol=False))
 
     def _parse_main(self, bs):

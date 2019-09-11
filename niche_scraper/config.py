@@ -56,6 +56,12 @@ class AppConfig(UserConfig):
         HomeState = StringOption(
             "2 letter abreviation of the state you live in to determine 'InState' tuition.",
             required=True)
+        HomeState.choices = [
+          "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+          "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+          "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+          "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
         HousingDistance = IntegerOption(
             "If the school is less than this many miles away, then housing is not required, and housing costs will NOT be added to totals. Set to 0 to force on-school housing and include housing costs.", 
             default=81,

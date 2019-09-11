@@ -20,11 +20,19 @@ from user_config import *
 from six import string_types
 import argparse
 
+class BooleanOption(ConfigElement):
+    action = 'store_true'
+    type_ = bool
+    subtype = None
+    def __init__(self, *args, **kwdargs):
+        ConfigElement.__init__(self, *args, **kwdargs)
+
 # I am not proud of this.
 def _construct_parser(self, parser):
     """
     """
     name = []
+    dest = None
     if self._short_name is not None:
         name.append(self._short_name)
     if self._long_name is not None:
@@ -34,18 +42,24 @@ def _construct_parser(self, parser):
     type_ = self.type_ if self.action == 'store' else self.subtype
     # argparse attempts to convert, which does not end well with
     # python2 basestr
-    if issubclass(type_, string_types):
+    if type_ and issubclass(type_, string_types):
         type_ = str
-
+    extra = {}
+    if type_:
+        extra['type'] = type_
+    choices = getattr(self, 'choices', None)
+    if choices:
+        extra['choices'] = choices
+    if dest:
+        extra['dest'] = dest
     parser.add_argument(
         *name,
         action=self.action,
         #nargs=1,
         default=self._value,
-        type=type_,
-        choices=None,
         required=False if self._value is not None else self.required,
-        help=self.doc)
+        help=self.doc,
+        **extra)
 
 ConfigElement.construct_parser = _construct_parser
 
@@ -123,7 +137,8 @@ class UserConfig(Config):
         file_name="config",
         global_path=None,
         user_path=None,
-        cli=False):
+        cli=False,
+        parser=None):
         if self.application is None:
             raise AttributeError(
                 'application not set, please provide an application name')
@@ -153,24 +168,30 @@ class UserConfig(Config):
 
         # construct a commandline parser
         # always construct it so we can do gooey stuff
-        self.parser = argparse.ArgumentParser(
-            prog=self.application,
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            description="{}\n\n{}\n{}\n{}".format(
-                self.__doc__,
-                "Command line arguments overwrite configuration found in:",
-                user_path,
-                global_path))
-        self.parser.add_argument(
-            '--save',
-            action='store_const',
-            const=True,
-            default=False,
-            required=False,
-            dest='__save__',
-            help="Save the configuration options to {}".format(user_path),)
+        if parser:
+            self.parser = parser
+        else:
+            self.parser = argparse.ArgumentParser(
+                prog=self.application,
+                formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                description="{}\n\n{}\n{}\n{}".format(
+                    self.__doc__,
+                    "Command line arguments overwrite configuration found in:",
+                    user_path,
+                    global_path))
+        if cli:
+            self.parser.add_argument(
+                '--save',
+                action='store_const',
+                const=True,
+                default=False,
+                required=False,
+                metavar='save',
+                dest='__save__',
+                help="Save the configuration options to {}".format(user_path),)
         for element in self._elements:
-            self._elements[element].construct_parser(self.parser)
+            gp = self.parser.add_argument_group(element, self._elements[element].__doc__)
+            self._elements[element].construct_parser(gp)
         
         if cli:
             command_line_arguments = vars(self.parser.parse_args())

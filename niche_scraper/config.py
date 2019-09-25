@@ -85,6 +85,14 @@ class AppConfig(UserConfig):
 
     geo = GeoLocationSection()
 
+    class GoogleSection(Section):
+        WorkbookKey = StringOption(
+            "Google key to the spreadsheet workbook.",
+            required=False)
+        CredentialsJSONFile = StringOption(
+            "Path to the google secret json file.",
+            required=False)
+
 def main():
     AppConfig(cli=True)
 

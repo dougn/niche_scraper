@@ -4,3 +4,7 @@ geopy
 beautifulsoup4
 user-config
 gooey
+oauth2client
+PyOpenSSL
+gspread
+gspread-formatting

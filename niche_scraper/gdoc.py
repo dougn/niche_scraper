@@ -86,4 +86,4 @@ class Workbook:
             row = self.sRotated.range(f'C{I}:{C}{I}')
             for c, v in zip(row, drow[2:]):
                 c.value = v
-            self.sCollapsed.update_cells(row)
+            self.sRotated.update_cells(row)

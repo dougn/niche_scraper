@@ -27,6 +27,17 @@ class BooleanOption(ConfigElement):
     def __init__(self, *args, **kwdargs):
         ConfigElement.__init__(self, *args, **kwdargs)
 
+class FileOption(StringOption):
+    subtype = argparse.FileType
+    def validate(self, value):
+        if value is None:
+            return
+        if not isinstance(value, self.subtype) and not isinstance(value, self.type_):
+            raise InvalidData('expected a {}, not {}'.format(
+                self.subtype, value))
+        if self._validate is not None:
+            self._validate(value)
+
 # I am not proud of this.
 def _construct_parser(self, parser):
     """
@@ -40,6 +51,8 @@ def _construct_parser(self, parser):
     else:
         name.append("--{}".format(self.element_name))
     type_ = self.type_ if self.action == 'store' else self.subtype
+    if getattr(self, 'subtype', None) is argparse.FileType:
+        type_ = argparse.FileType
     # argparse attempts to convert, which does not end well with
     # python2 basestr
     if type_ and issubclass(type_, string_types):
@@ -88,8 +101,10 @@ def _print_item(fileobj, key, item, value):
         if item.required:
             print("## REQUIRED", file=fileobj)
         print("# {} = ".format(key), file=fileobj)
-
+    
     # print current value
+    if isinstance(value, argparse.FileType):
+        value = getattr(value, 'name', getattr(value, '_mode', ''))
     if value is None and item.required:
         print("{} = ".format(key), file=fileobj)
     elif value is not None and value != item.get_default():

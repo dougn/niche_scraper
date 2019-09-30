@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Doug Napoleone
 
 import sys
-from .usrcfg import UserConfig, Section, StringOption, IntegerOption, FloatOption, BooleanOption
+from .usrcfg import UserConfig, Section, StringOption, IntegerOption, FloatOption, BooleanOption, FileOption
 from .version import __version__, __author__
 
 __all__ = ['AppConfig', 'CONFIG']
@@ -98,7 +98,7 @@ class AppConfig(UserConfig):
         WorkbookKey = StringOption(
             "Google key to the spreadsheet workbook.",
             required=False)
-        CredentialsJSONFile = StringOption(
+        CredentialsJSONFile = FileOption(
             "Path to the google secret json file.",
             required=False)
     

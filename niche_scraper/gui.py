@@ -13,8 +13,8 @@ import sys
         suppress_gooey_flag	= True
 )
 def main():
-    #parser = gooey.GooeyParser()
-    parser = argparse.ArgumentParser('')
+    parser = gooey.GooeyParser()
+    #parser = argparse.ArgumentParser('')
     #sub_parsers = parser.add_subparsers(title="subTitle", description="SubDescription", help="SubHElp")
     #mainparser = sub_parsers.add_parser('Generate')
     #mainparser.add_argument('foo')

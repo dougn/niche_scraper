@@ -1,6 +1,7 @@
 import gooey
 import argparse
 from .config import *
+import sys
 
 @gooey.Gooey(
         advanced=True,
@@ -8,6 +9,8 @@ from .config import *
         program_name='niche_scraper',
         #navigation='TABBED',
         tabbed_groups=True,
+        target = sys.executable + ' -m niche_scraper.config ',
+        suppress_gooey_flag	= True
 )
 def main():
     #parser = gooey.GooeyParser()

@@ -1,5 +1,6 @@
 # Copyright (c) 2019 Doug Napoleone
 
+import sys
 from .usrcfg import UserConfig, Section, StringOption, IntegerOption, FloatOption, BooleanOption
 from .version import __version__, __author__
 
@@ -24,6 +25,10 @@ class AppConfig(UserConfig):
         Large = IntegerOption("Schools with this student body size or larger are large.",
             default=15000,
             required=False)
+        ReadListFromNiche = BooleanOption(
+            "Read the list of schools from niche.com account instead of supplied file. Must set the login information in the web section.",
+            default=False,
+            required=False)
 
     general = GeneralSection()
     class WebSection(Section):
@@ -34,6 +39,10 @@ class AppConfig(UserConfig):
             required=False)
         UserAgent = StringOption("User-Agent to use when talking to niche.com", 
             default='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+            required=False)
+        LoginCookieName = StringOption("Login cookie value for niche.com; set to allow getting the list of schools directly.",
+            required=False)
+        LoginCookieValue = StringOption("Login cookie value for niche.com; set to allow getting the list of schools directly.",
             required=False)
     web = WebSection()
     class GeoLocationSection(Section):
@@ -92,8 +101,14 @@ class AppConfig(UserConfig):
         CredentialsJSONFile = StringOption(
             "Path to the google secret json file.",
             required=False)
+    
+    google = GoogleSection()
 
 def main():
+    if '--ignore-gooey' in sys.argv:
+        sys.argv.remove('--ignore-gooey')
+        if '--save' not in sys.argv:
+            sys.argv.append('--save')
     AppConfig(cli=True)
 
 if __name__ == '__main__':

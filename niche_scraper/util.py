@@ -10,7 +10,6 @@ from .config import CONFIG
 
 BASE_URL='https://www.niche.com/colleges/'
 EMDASH='—'
-
 locale.setlocale( locale.LC_ALL, '' )
 
 dol2int = lambda x: 0 if x.replace(EMDASH, '').replace('-','').strip() == '' else int(x.strip().replace('$','').replace(',',''), 10)
@@ -22,15 +21,26 @@ def b64string(string):
 def flush_cache():
     shutil.rmtree(CONFIG.user_cache_dir, ignore_errors=True)
 
-def get_page(url, cache=CONFIG.web.Cache):
+def get_page(url, 
+             cache=CONFIG.web.Cache, 
+             login_cookie_name=CONFIG.web.LoginCookieName, 
+             login_cookie_value=CONFIG.web.LoginCookieValue):
     cachefilename = CONFIG.user_cache_dir.joinpath(b64string(url))
     data = None
     if cache and os.path.isfile(cachefilename):
         data = open(cachefilename, 'r').read()
     else:
+        cookies = {}
+        if login_cookie_name and login_cookie_value:
+            cookies[login_cookie_name] = login_cookie_value
+
         # add check on result code, and return None on redirect.
-        res = requests.get(url, headers={'User-Agent': CONFIG.web.UserAgent}, allow_redirects=False)
-        if res.status_code == 301:
+        res = requests.get(
+            url, 
+            headers={'User-Agent': CONFIG.web.UserAgent}, 
+            allow_redirects=False,
+            cookies=cookies)
+        if res.status_code in [301, 302]:
             return None
         data = res.content
         if cache:

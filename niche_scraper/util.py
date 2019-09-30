@@ -33,7 +33,6 @@ def get_page(url,
         cookies = {}
         if login_cookie_name and login_cookie_value:
             cookies[login_cookie_name] = login_cookie_value
-
         # add check on result code, and return None on redirect.
         res = requests.get(
             url, 

@@ -243,7 +243,15 @@ class School:
             bs = get_page(url)
             if bs is not None:
                 getattr(self, '_parse_'+page)(bs)
-        
+
+def load_schools():
+    account = get_page('https://www.niche.com/account/', False)
+    if not account:
+        return None
+    school_urls = [s.a.attrs['href'] for s in account.find_all('span', class_='postcard__title') if s.a]
+    nschools = len(school_urls)
+    print(f"Found {nschools} schools to load from Niche account.")
+    return [School(u) for u in school_urls]
 
 def rotated_rows_iter(schools):
     prefix=['', '']

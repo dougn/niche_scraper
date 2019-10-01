@@ -20,7 +20,11 @@ def main(flush, google, urllist, key, main, collapsed, rotated):
     if flush:
         flush_cache()
     if urllist is None:
-        schools = load_schools()
+        schools = load_schools(False)
+        print("Writing schools.lst")
+        with open('schools.lst', 'w') as lst:
+            for s in schools:
+                lst.write(s.urls['main']+'\n')
     else:
         urls = [url.strip() for url in urllist]
         schools = [School(url) for url in urls if url.startswith(BASE_URL)]

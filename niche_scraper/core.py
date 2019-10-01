@@ -244,8 +244,8 @@ class School:
             if bs is not None:
                 getattr(self, '_parse_'+page)(bs)
 
-def load_schools():
-    account = get_page('https://www.niche.com/account/', False)
+def load_schools(cache=False):
+    account = get_page('https://www.niche.com/account/', cache)
     if not account:
         return None
     school_urls = [s.a.attrs['href'] for s in account.find_all('span', class_='postcard__title') if s.a]

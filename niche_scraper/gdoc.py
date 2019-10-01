@@ -61,29 +61,44 @@ class Workbook:
 
     def write_sortable(self, schools):
         print("Writing sortable.")
-        for I, school in enumerate(schools, 3):
-            C = I2COL[len(COLUMNS)]
-            row = self.sSortable.range(f'A{I}:{C}{I}')
-            for n, c in zip(COLUMNS, row):
-                c.value = school.row.get(n, '')
-            self.sSortable.update_cells(row)
+        c = len(COLUMNS)-1
+        C = I2COL[c]
+        l = len(schools)
+        I = l+3
+        rows = self.sSortable.range(f'A3:{C}{I}')
+        for i, school in enumerate(schools):
+            start = i*c+i
+            end = start+c
+            for name, cell in zip(COLUMNS[:-1], rows[start:end]):
+                cell.value = school.row.get(name, '')
+            rows[end].value = i
+        self.sSortable.update_cells(rows)
 
     def write_collapsed(self, schools):
         print("Writing collapsed.")
-        for I, school in enumerate(schools, 3):
-            C = I2COL[len(COLLAPSED)]
-            row = self.sCollapsed.range(f'A{I}:{C}{I}')
-            for n, c in zip(COLLAPSED, row):
-                c.value = school.row.get(n, '')
-            self.sCollapsed.update_cells(row)
+        c = len(COLLAPSED)-1
+        C = I2COL[c]
+        l = len(schools)
+        I = l+3
+        rows = self.sCollapsed.range(f'A3:{C}{I}')
+        for i, school in enumerate(schools):
+            start = i*c+i
+            end = start+c
+            for name, cell in zip(COLLAPSED[:-1], rows[start:end]):
+                cell.value = school.row.get(name, '')
+            rows[end].value = i
+        self.sCollapsed.update_cells(rows)
 
     def write_rotated(self, schools):
         # we don't need to do the rotation... ya know...
+        # but this IS much easier
         print("Writing rotated.")
-        rows = rotated_rows_iter(schools)
-        C = I2COL[len(schools)+2]
-        for I, drow in enumerate(rows,1):
-            row = self.sRotated.range(f'C{I}:{C}{I}')
-            for c, v in zip(row, drow[2:]):
-                c.value = v
-            self.sRotated.update_cells(row)
+        C = I2COL[len(schools)+1]
+        I = sum((len(c) for c in BREAKDOWN.values()), len(BREAKDOWN))
+        cells = self.sRotated.range(f'A1:{C}{I}')
+        i = 0
+        for row in rotated_rows_iter(schools):
+            for value in row:
+                cells[i].value = value
+                i+=1
+        self.sRotated.update_cells(cells)

@@ -5,7 +5,8 @@ import os.path
 import shutil
 import requests
 import json
-import selenium
+import time
+import selenium.webdriver
 from bs4 import BeautifulSoup
 from geopy import distance
 from .config import CONFIG
@@ -79,17 +80,20 @@ def get_page(url,
     data = None
     if cache and os.path.isfile(cachefilename):
         data = open(cachefilename, 'r').read()
+        #print(f'   {url}: Cache {cachefilename}')
     else:
         Driver.driver.get(url)
         data = Driver.driver.page_source
+        #print(f'   {url}: Live {len(data)}')
         #har = json.loads(Driver.driver.get_log('har')[0]['message'])
         #status = har['log']['entries'][0]['response']['status']
         #if status in ['301', '302']:
         #    return None
         if cache:
             os.makedirs(CONFIG.user_cache_dir, exist_ok=True)
-            data_conv = data.decode('utf-8')
-            open(cachefilename, 'w').write(data_conv)
+            #data_conv = data.decode('utf-8')
+            open(cachefilename, 'w').write(data)
+        time.sleep(10)
     return BeautifulSoup(data, 'html.parser')
 
 

@@ -77,7 +77,8 @@ class School:
 
         # lon/lat
         lon = bs.find('meta', property='place:location:longitude')
-        self.row['State'] = json.loads(lon.parent()[-1].text)['address']['addressRegion']
+        jsd = bs.find_all('script', type='application/ld+json')[-1].text
+        self.row['State'] = json.loads(jsd)['address']['addressRegion']
         self.longitude = float(lon.get('content'))
         self.latitude = float(bs.find('meta', property='place:location:latitude').get('content'))
 
@@ -240,6 +241,7 @@ class School:
         Parse all the pages into the primary row data.
         """
         for page, url in self.urls.items():
+            print(url)
             bs = get_page(url)
             if bs is not None:
                 getattr(self, '_parse_'+page)(bs)
